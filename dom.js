@@ -1,99 +1,105 @@
 var Dom = function(root){
+  var CLASSES = 'classes',
+      ELEMENTS = 'elements',
+      THIS = this,
+      VALUES = 'values',
+      list = [ document ],
+      type = 'elements'
 
+  var isIn = function(object, value){
+    return object.indexOf(value) > -1
+  }
+  
+  var propertyOf = function(element){
+    return element.hasOwnProperty('value') ? 'value' : 'innerHTML'
+  }
+
+  var valueOf = function(element){
+    return element[propertyOf(element)]
+  }
+  
   // Select by CSS class
-  this.css = function(value){
+  /*THIS.css = function(value){
     var elements, i, j, result = []
     for(i = 0; i < list.length; i++){
       elements = list[i].getElementsByTagName('*')
       for(j = 0; j < elements.length; j++){
-        if(elements[j].hasOwnProperty('className') && elements[j].className.indexOf(value) > -1 && result.indexOf(elements[j]) == -1){
+        if(elements[j].hasOwnProperty('className') && isIn(elements[j].className, value) && !isIn(result, elements[j])){
           result.push(elements[j])
         }
       }
     }
     list = result
-    return this
-  }
+    return THIS
+  }*/
 
   // Select by ID
-  this.id = function(value){
+  /*THIS.id = function(value){
     list = [ document.getElementById(value) ]
-    return this
-  },
+    return THIS
+  }*/
 
   // Select by NAME attribute
-  this.name = function(value){
+  /*THIS.name = function(value){
     list = document.getElementsByName(value)
-    return this
-  }
+    return THIS
+  }*/
   
   // Select by CSS selector
-  this.select = function(value){
+  THIS.select = function(value){
     var elements, i, j, result = []
     for(i = 0; i < list.length; i++){
       elements = list[i].querySelectorAll(value)
       for(j = 0; j < elements.length; j++){
-        if(result.indexOf(elements[j]) == -1){
+        if(!isIn(result, elements[j])){
           result.push(elements[j])
         }
       }
     }
     list = result
-    return this
+    return THIS
   }
   
   // Select by TAG name
-  this.tag = function(value){
+  /*THIS.tag = function(value){
     var elements, i, j, result = []
     for(i = 0; i < list.length; i++){
       elements = list[i].getElementsByTagName(value)
       for(j = 0; j < elements.length; j++){
-        if(result.indexOf(elements[j]) == -1){
+        if(!isIn(result, elements[j])){
           result.push(elements[j])
         }
       }
     }
     list = result
-    return this
-  }
+    return THIS
+  }*/
 
-  // Change activity mode to CSS classes of DOM-elements
-  this.classes = function(){
-    type = 'classes'
-    return this
-  }
-
-  // Change activity mode to DOM-elements
-  this.elements = function(){
-    type = 'elements'
-    return this
-  }
-
-  // Change activity mode to a content of DOM-elements
-  this.values = function(){
-    type = 'values'
-    return this
+  // Change activity mode
+  THIS.on = function(value){
+    if(isIn([CLASSES, ELEMENTS, VALUES], value)){ type = value }
+    return THIS
   }
 
   // Return array of elements or classes, or values
-  this.all = function(){
+  THIS.all = function(){
     var data = [], i, j, value
     switch(type){
-    case 'classes':
+    case CLASSES:
       for(i in list){
         for(j = 0; j < list[i].classList.length; j++){
           value = list[i].classList[j]
-          if(data.indexOf(value) == -1){ data.push(value) }
+          if(!isIn(data, value)){ data.push(value) }
         }
       }
       break
-    case 'elements':
+    case ELEMENTS:
       data = list
       break
-    case 'values':
+    case VALUES:
       for(i in list){
         value = valueOf(list[i])
-        if(data.indexOf(value) == -1){ data.push(value) }
+        if(!isIn(data, value)){ data.push(value) }
       }
       break
     }
@@ -101,28 +107,28 @@ var Dom = function(root){
   }
 
   // Return a count of all selected DOM-elements
-  this.count = function(){
+  THIS.count = function(){
     return list.length
   }
   
   // Return the first element
-  this.first = function(){
-    return this.only(0)
+  THIS.first = function(){
+    return THIS.only(0)
   }
   
   // Return the last element
-  this.last = function(){
-    return this.only(list.length - 1)
+  THIS.last = function(){
+    return THIS.only(list.length - 1)
   }
 
   // Return an item from a list of DOM-elements or list of CSS classes of that, or a content
-  this.only = function(key){
+  THIS.only = function(key){
     var value = list[key]
     switch(type){
-    case 'classes':
+    case CLASSES:
       value = value.classList
       break
-    case 'values':
+    case VALUES:
       value = valueOf(value)
       break
     }
@@ -130,76 +136,68 @@ var Dom = function(root){
   }
 
   // Add a child element or CSS class, or a content to all selected DOM-elements
-  this.add = function(value){
+  THIS.add = function(value){
     for(var i in list){
       switch(type){
-      case 'classes':
+      case CLASSES:
         list[i].classList.add(value)
         break
-      case 'elements':
+      case ELEMENTS:
         list[i].appendChild(value)
         break
-      case 'values':
-        list[i][list[i].hasOwnProperty('value') ? 'value' : 'innerHTML'] += value
+      case VALUES:
+        list[i][propertyOf(list[i])] += value
         break
       }
     }
-    return this
+    return THIS
   }
 
   // Remove chosen element or CSS class, or a content of chosen DOM-element
-  this.remove = function(key){
+  THIS.remove = function(key){
     var i, j
     switch(type){
-    case 'classes':
-      if(list.indexOf(key) >= 0){
+    case CLASSES:
+      if(isIn(list, key)){
         list[key].className = ''
       }else{
         for(var i in list){ list[i].classList.remove(key) }
       }
       break
-    case 'elements':
+    case ELEMENTS:
       if(list[key] != undefined){
         if(typeof(list[key].remove) == 'function'){ list[key].remove() }
         delete list[key]
       }
       break
-    case 'values':
-      list[key][list[key].hasOwnProperty('value') ? 'value' : 'innerHTML'] = ''
+    case VALUES:
+      list[key][propertyOf(list[i])] = ''
       break
     }
-    return this
+    return THIS
   }
   
   // Remove all selected elements or values, or clear CSS classes
-  this.removeAll = function(){
+  THIS.removeAll = function(){
     for(var i in list){
       switch(type){
-      case 'classes':
+      case CLASSES:
         list[i].className = ''
         break
-      case 'elements':
+      case ELEMENTS:
         if(typeof(list[i].remove) == 'function'){ list[i].remove() }
         delete list[i]
         break
-      case 'values':
-        list[i][list[i].hasOwnProperty('value') ? 'value' : 'innerHTML'] = ''
+      case VALUES:
+        list[i][propertyOf(list[i])] = ''
         break
       }
     }
-    return this
+    return THIS
   }
 
-  var valueOf = function(element){
-    return element[element.hasOwnProperty('value') ? 'value' : 'innerHTML']
-  }
-    
-  var list = [ document ]
-  
-  var type = 'elements'
-  
-  if(typeof(root) == 'string'){ this.select(root) }
+  if(typeof(root) == 'string'){ THIS.select(root) }
   else if(typeof(root.innerHTML) == 'string'){ list = [ root ] }
 
-  return this
+  return THIS
 }
