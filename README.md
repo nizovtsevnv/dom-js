@@ -11,6 +11,8 @@ It can:
 * get DOM-elements by a CSS class or a DOM ID, or a name attribute, or a tag name, or a CSS selector
 * add/remove selected elements or values of selected elements, or CSS classes
 * use chains like Dom('#el').classes().add('bold_class').remove('old_class').values().add('Hi all there!')
+* work on desktop browsers like: Firefox 3.5+, Chrome 1+, Safari 3.2+, Opera 10+, IE 8+
+* work on mobile systems with Android 2.1+ or Firefox M, Safari M3.2+, Opera M10+, IE M9+
 
 Syntax
 ------
