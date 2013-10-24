@@ -3,12 +3,14 @@ dom.js
 
 Simple library for work with DOM-elements.
 
-It can:
-- get DOM-elements by a CSS class or a DOM ID, or a name attribute, or a tag name, or a CSS selector
-- add/remove selected elements or values of selected elements, or CSS classes
-- use chain like
+It's a lightweight:
+* minified ~1.5K
+* gzipped ~0.6K
 
-    Dom('#el').classes().add('bold_class').remove('old_class').values().add('Hi all there!')
+It can:
+* get DOM-elements by a CSS class or a DOM ID, or a name attribute, or a tag name, or a CSS selector
+* add/remove selected elements or values of selected elements, or CSS classes
+* use chains like Dom('#el').classes().add('bold_class').remove('old_class').values().add('Hi all there!')
 
 Syntax
 ------
