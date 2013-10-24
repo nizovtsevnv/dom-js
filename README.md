@@ -7,6 +7,7 @@ It can:
 - get DOM-elements by a CSS class or a DOM ID, or a name attribute, or a tag name, or a CSS selector
 - add/remove selected elements or values of selected elements, or CSS classes
 - use chain like
+
     Dom('#el').classes().add('bold_class').remove('old_class').values().add('Hi all there!')
 
 Syntax
@@ -36,13 +37,17 @@ Samples
 -------
 
 Return an array of DOM-elements with CSS class "some_class":
+
     new Dom('.some_class').all()
 
 Return an array of all CSS classes in DOM-elements with CSS class "some_class":
+
     new Dom('.some_class').classes().all()
 
 Return an array of all contains in DOM-elements with CSS class "some_class":
+
     new Dom('.some_class').values().all()
 
 Remove all content in DOM-elements with CSS class "some_class" and add there "Hello world!":
+
     new Dom('.some_class').values().removeAll().add('Hello world!')
